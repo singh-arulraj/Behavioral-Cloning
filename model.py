@@ -9,11 +9,12 @@ import sklearn
 from random import shuffle
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Flatten, Dense, Lambda, Activation
+from tensorflow.keras.layers import Flatten, Dense, Lambda, Activation, Dropout
 from tensorflow.keras.layers import Convolution2D
 from tensorflow.keras.layers import MaxPooling2D, Cropping2D
 
-BASE_FOLDER = './data_self/'
+#BASE_FOLDER = './data_July25/'
+BASE_FOLDER = './data/'
 MEASUREMENTS_FILE = BASE_FOLDER + 'driving_log.csv'
 IMAGE_FOLDER = BASE_FOLDER + 'IMG/'
 
@@ -31,7 +32,7 @@ train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
 def generator(samples, batch_size=32, testData = True):
     num_samples = len(samples)
-    correction = 0.1
+    correction = 0.2
     while 1: # Loop forever so the generator never terminates
         shuffle(samples)
         for offset in range(0, num_samples, batch_size):
@@ -59,15 +60,15 @@ def generator(samples, batch_size=32, testData = True):
                     left_image = cv2.imread(name)
                     left_angle = center_angle + correction
                     
-                    #images.append(cv2.flip(left_image, 1))
-                    #angles.append(left_angle)
+                    images.append(left_image)
+                    angles.append(left_angle)
                     
                     name = IMAGE_FOLDER+batch_sample[2].split('/')[-1]
                     right_image = cv2.imread(name)	
                     right_angle = center_angle - correction
                     
-                    #images.append(cv2.flip(right_image, 1))
-                    #angles.append(right_angle)
+                    images.append(right_image)
+                    angles.append(right_angle)
 
             # trim image to only see section with road
             X_train = np.array(images)
@@ -91,6 +92,7 @@ model.add(Lambda(lambda x: x/255. - 0.5,
         output_shape=(row, col, ch)))
 model.add(Cropping2D(cropping=((70,25), (0,0))))
 model.add(Convolution2D(24,5,5, activation='relu'))
+#model.add(Dropout(0.5))
 model.add(Convolution2D(36,5,5, activation='relu'))
 #model.add(Convolution2D(48,5,5, activation='relu'))
 #model.add(Convolution2D(64,3,3, activation='relu'))
