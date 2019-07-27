@@ -19,9 +19,9 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [image2]: ./examples/center_2019_07_25_19_34_50_080.jpg "Grayscaling"
-[image3]: ./examples/center_2019_07_25_20_02_43_431.jpg "Recovery Image"
-[image4]: ./examples/center_2019_07_25_20_02_44_554.jpg "Recovery Image"
-[image5]: ./examples/center_2019_07_25_20_02_44_979.jpg "Recovery Image"
+[image3]: ./examples/center_2019_07_27_18_34_22_466.jpg "Recovery Image"
+[image4]: ./examples/center_2019_07_27_18_34_22_606.jpg "Recovery Image"
+[image5]: ./examples/center_2019_07_27_18_34_22_745.jpg "Recovery Image"
 [image6]: ./examples/center_2019_07_25_19_34_50_080.jpg "Normal Image"
 [image7]: ./examples/Figure_1.png "Flipped Image"
 
@@ -53,13 +53,15 @@ The model.py file contains the code for training and saving the convolution neur
 
 #### 1. An appropriate model architecture has been employed
 
-My model consists of a convolution neural network with 5x5 kernel sizes and depths between 24 and 36 (model.py lines 93-94) 
+My model consists of a 2 Layers of convolution neural network with 5x5 kernel sizes and depths between 24 and 36 (model.py lines 95-96) 
+Followed by Another 2 layers of convolution neural network with kernel sizes 3 X 3 and depths 48 and 64.
+Maxpooling layer is deployed.
 
-The model includes RELU layers to introduce nonlinearity (code line 93-94), and the data is normalized in the model using a Keras lambda layer (code line 89). 
+The model includes RELU layers to introduce nonlinearity (code line 95-100), and the data is normalized in the model using a Keras lambda layer (code line 91). 
 
 #### 2. Attempts to reduce overfitting in the model
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting. The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+The model was trained and validated on different data sets to ensure that the model was not overfitting. The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track. 2 Dropout layers have been deployed to reduce overfitting.
 
 #### 3. Model parameter tuning
 
@@ -83,29 +85,34 @@ In order to gauge how well the model was working, I split my image and steering 
 
 Then I augmented data by flipping image and using left and right camera.
 
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track. to improve the driving behavior in these cases, I added data set for recovery.
+The final step was to run the simulator to see how well the car was driving around track one. I have used dataset provided by udacity for track1. There were a few spots where the vehicle fell off the track, to improve the driving behavior in these cases, I added data set for recovery.
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
 #### 2. Final Model Architecture
 
 The final model architecture (model.py lines 88-108) consisted of a convolution neural network with the following layers and layer sizes 
-Normalization
-Crop image
-Convolution Layer 1 
-Drop out
-Canvolution Layer 2
-Flatten
-Dense
-Dense
-Dense
-Dense
+* Normalization
+* Crop image
+* Convolution Layer Number of Convolution Filter(24)
+* Canvolution Layer Number of Convolution Filter(36)
+* Dropout (30%)
+* Convolution Layer Number of Convolution Filter(48)
+* Maxpooling
+* Canvolution Layer Number of Convolution Filter(64)
+* Maxpooling
+* Dropout (30%)
+* Flatten
+* Dense Size(100)
+* Dense Size(50)
+* Dense Size(10)
+* Dense Size(1)
 
 
 
 #### 3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+I have used the data set provided by the Udacity to train my model. However there was issues while rrecovery. Have added few recordings for recovery.
 
 ![alt text][image2]
 

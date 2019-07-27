@@ -10,10 +10,10 @@ from random import shuffle
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Flatten, Dense, Lambda, Activation, Dropout
-from tensorflow.keras.layers import Convolution2D
+from tensorflow.keras.layers import Convolution2D, Conv2D
 from tensorflow.keras.layers import MaxPooling2D, Cropping2D
 
-#BASE_FOLDER = './data_July25/'
+#BASE_FOLDER = "C:/Users/arul/Desktop/german-traffic-sign/safalini/"
 BASE_FOLDER = './data/'
 MEASUREMENTS_FILE = BASE_FOLDER + 'driving_log.csv'
 IMAGE_FOLDER = BASE_FOLDER + 'IMG/'
@@ -56,6 +56,7 @@ def generator(samples, batch_size=32, testData = True):
                     images.append(cv2.flip(center_image, 1))
                     angles.append(center_angle * -1.0)
                     
+                    #Add image from Left Camera
                     name = IMAGE_FOLDER+batch_sample[1].split('/')[-1]
                     left_image = cv2.imread(name)
                     left_angle = center_angle + correction
@@ -63,6 +64,7 @@ def generator(samples, batch_size=32, testData = True):
                     images.append(left_image)
                     angles.append(left_angle)
                     
+                    #Add Image from Right Camera
                     name = IMAGE_FOLDER+batch_sample[2].split('/')[-1]
                     right_image = cv2.imread(name)	
                     right_angle = center_angle - correction
@@ -82,7 +84,6 @@ batch_size=32
 train_generator = generator(train_samples, batch_size=batch_size, testData = True)
 validation_generator = generator(validation_samples, batch_size=batch_size, testData = False)
 
-#ch, row, col = 3, 80, 320  # Trimmed image format
 row, col, ch = 160, 320, 3  # Trimmed image format
 
 model = Sequential()
@@ -90,15 +91,17 @@ model = Sequential()
 model.add(Lambda(lambda x: x/255. - 0.5,
         input_shape=(row, col, ch),
         output_shape=(row, col, ch)))
-model.add(Cropping2D(cropping=((70,25), (0,0))))
-model.add(Convolution2D(24,5,5, activation='relu'))
-#model.add(Dropout(0.5))
-model.add(Convolution2D(36,5,5, activation='relu'))
-#model.add(Convolution2D(48,5,5, activation='relu'))
-#model.add(Convolution2D(64,3,3, activation='relu'))
-#model.add(Convolution2D(64,3,3, activation='relu'))
+model.add(Cropping2D(cropping=((75,25), (0,0))))
+model.add(Conv2D(24, kernel_size = (5,5), strides = (2,2),  activation='relu'))
+model.add(Conv2D(36, kernel_size = (5,5), strides = (2,2),  activation='relu'))
+model.add(Dropout(0.3))
+model.add(Conv2D(48, kernel_size = (3,3), strides = (1,1),  activation='relu'))
+model.add(MaxPooling2D())
+model.add(Conv2D(64, kernel_size = (3,3), strides = (1,1),  activation='relu'))
+model.add(MaxPooling2D())
+model.add(Dropout(0.3))
+
 model.add(Flatten())
-#model.add(Dense(1164))
 model.add(Dense(100))
 model.add(Dense(50))
 model.add(Dense(10))
