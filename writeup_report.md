@@ -112,7 +112,7 @@ The final model architecture (model.py lines 88-108) consisted of a convolution 
 
 #### 3. Creation of the Training Set & Training Process
 
-I have used the data set provided by the Udacity to train my model. However there was issues while rrecovery. Have added few recordings for recovery.
+I have used the data set provided by the Udacity to train my model. However there was issues while recovery. Have added few recordings for recovery.
 
 ![alt text][image2]
 
@@ -131,7 +131,7 @@ To augment the data sat, I also flipped images and angles thinking that this wou
 
 
 
-After the collection process, I had 8036 number of data points. I then preprocessed this data by cropping the data and normalizing the image.
+After using data augmentation and using left and right camera images I had 43328 data points. I then preprocessed this data by cropping the data and normalizing the image.
 
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set. 
